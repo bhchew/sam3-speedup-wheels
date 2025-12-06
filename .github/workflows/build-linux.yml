@@ -51,8 +51,11 @@ jobs:
         run: |
           CUDA_VER="${{ inputs.cuda_version || env.DEFAULT_CUDA }}"
           CUDA_NODOT=$(echo $CUDA_VER | tr -d '.')
+          # For apt package (e.g., 12.1 -> 12-1)
+          CUDA_APT=$(echo $CUDA_VER | tr '.' '-')
           echo "cuda=$CUDA_VER" >> $GITHUB_OUTPUT
           echo "cuda_nodot=$CUDA_NODOT" >> $GITHUB_OUTPUT
+          echo "cuda_apt=$CUDA_APT" >> $GITHUB_OUTPUT
 
       - name: Free disk space
         run: |
@@ -60,11 +63,13 @@ jobs:
           df -h
 
       - name: Install CUDA toolkit
-        uses: Jimver/cuda-toolkit@v0.2.19
-        id: cuda-toolkit
-        with:
-          cuda: '${{ steps.versions.outputs.cuda }}'
-          linux-local-args: '["--toolkit"]'
+        run: |
+          wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-keyring_1.1-1_all.deb
+          sudo dpkg -i cuda-keyring_1.1-1_all.deb
+          sudo apt-get update
+          sudo apt-get -y install cuda-toolkit-${{ steps.versions.outputs.cuda_apt }}
+          echo "/usr/local/cuda-${{ steps.versions.outputs.cuda }}/bin" >> $GITHUB_PATH
+          echo "CUDA_HOME=/usr/local/cuda-${{ steps.versions.outputs.cuda }}" >> $GITHUB_ENV
 
       - name: Install PyTorch and build tools
         run: |
@@ -90,7 +95,6 @@ jobs:
         run: |
           cd ${{ matrix.package }}
           export TORCH_CUDA_ARCH_LIST="7.0;7.5;8.0;8.6;8.9;9.0"
-          export CUDA_HOME="${{ steps.cuda-toolkit.outputs.CUDA_PATH }}"
           python setup.py bdist_wheel
           ls -la dist/
 
