@@ -1,4 +1,4 @@
-name: Build CUDA 12.8 + PyTorch 2.8.1
+name: Build CUDA 12.8 + PyTorch 2.8.0
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 
 env:
   CUDA_VERSION: '12.8'
-  PYTORCH_VERSION: '2.8.1'
+  PYTORCH_VERSION: '2.8.0'
   TORCH_CUDA_ARCH_LIST: '7.5;8.6;8.9;9.0;10.0'
 
 jobs:
