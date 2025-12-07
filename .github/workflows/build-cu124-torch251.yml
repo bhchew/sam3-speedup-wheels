@@ -26,14 +26,14 @@ jobs:
 
     steps:
       - name: Free disk space
-        run: |
-          df -h
-          apt-get remove -y --purge '^dotnet-.*' '^llvm-.*' 'php.*' '^mongodb-.*' '^mysql-.*' azure-cli google-cloud-sdk google-chrome-stable firefox powershell mono-devel || true
-          apt-get autoremove -y || true
-          apt-get clean || true
-          rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/* || true
-          rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache || true
-          df -h
+        uses: jlumbroso/free-disk-space@main
+        with:
+          tool-cache: false
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: false
+          swap-storage: false
 
       - uses: actions/checkout@v4
 
@@ -51,9 +51,7 @@ jobs:
       - name: Install PyTorch and build tools
         run: |
           python -m pip install --upgrade pip
-          # Install CUDA PyTorch then remove bundled NVIDIA libs (we have system CUDA)
-          python -m pip install torch==${{ env.PYTORCH_VERSION }}+cu124 --index-url https://download.pytorch.org/whl/cu124
-          pip uninstall -y nvidia-cublas-cu12 nvidia-cuda-nvrtc-cu12 nvidia-cuda-runtime-cu12 nvidia-cudnn-cu12 nvidia-cufft-cu12 nvidia-curand-cu12 nvidia-cusolver-cu12 nvidia-cusparse-cu12 nvidia-nccl-cu12 nvidia-nvtx-cu12 nvidia-nvjitlink-cu12 nvidia-cufile-cu12 nvidia-cuda-cupti-cu12 || true
+          python -m pip install --no-cache-dir torch==${{ env.PYTORCH_VERSION }}+cu124 --index-url https://download.pytorch.org/whl/cu124
           python -m pip install wheel setuptools ninja
 
       - name: Verify setup
