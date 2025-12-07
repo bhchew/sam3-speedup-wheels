@@ -122,6 +122,24 @@ jobs:
           pip install torch==${{ env.PYTORCH_VERSION }}+cu128 --index-url https://download.pytorch.org/whl/cu128
           pip install wheel setuptools ninja
 
+      - name: Patch PyTorch header bug (pytorch/pytorch#166123)
+        shell: python
+        run: |
+          import torch
+          import os
+          header = os.path.join(os.path.dirname(torch.__file__), 'include', 'torch', 'csrc', 'dynamo', 'compiled_autograd.h')
+          print(f"Patching: {header}")
+          with open(header, 'r') as f:
+              content = f.read()
+          # Comment out the buggy lines that cause 'std': ambiguous symbol on MSVC
+          content = content.replace(
+              '} else if constexpr (::std::is_same_v<T, ::std::string>) {\n      return at::StringType::get();',
+              '// PATCHED: pytorch/pytorch#166123\n      // } else if constexpr (::std::is_same_v<T, ::std::string>) {\n      // return at::StringType::get();'
+          )
+          with open(header, 'w') as f:
+              f.write(content)
+          print("Patch applied successfully")
+
       - name: Verify setup
         run: |
           nvcc --version
