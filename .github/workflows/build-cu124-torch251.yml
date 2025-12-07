@@ -83,19 +83,11 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
 
-      - name: Cache CUDA installer
-        uses: actions/cache@v4
-        id: cuda-cache
-        with:
-          path: cuda_installer.exe
-          key: cuda-12.4.1-windows-installer
-
-      - name: Download CUDA installer
-        if: steps.cuda-cache.outputs.cache-hit != 'true'
+      - name: Download CUDA network installer
         shell: powershell
         run: |
-          $installerUrl = "https://developer.download.nvidia.com/compute/cuda/12.4.1/local_installers/cuda_12.4.1_551.78_windows.exe"
-          Write-Host "Downloading CUDA 12.4 from $installerUrl"
+          $installerUrl = "https://developer.download.nvidia.com/compute/cuda/12.4.1/network_installers/cuda_12.4.1_windows_network.exe"
+          Write-Host "Downloading CUDA 12.4 network installer (~31MB)..."
           Invoke-WebRequest -Uri $installerUrl -OutFile "cuda_installer.exe" -UseBasicParsing
 
       - name: Install CUDA toolkit
