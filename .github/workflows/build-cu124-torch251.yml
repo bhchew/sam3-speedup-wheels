@@ -102,7 +102,7 @@ jobs:
         shell: powershell
         run: |
           Write-Host "Installing CUDA toolkit..."
-          Start-Process -FilePath "cuda_installer.exe" -ArgumentList "-s", "-n", "nvcc_12.4", "cudart_12.4", "visual_studio_integration_12.4" -Wait -NoNewWindow
+          Start-Process -FilePath "cuda_installer.exe" -ArgumentList "-s", "-n", "nvcc_12.4", "cudart_12.4" -Wait -NoNewWindow
           $cudaPath = "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.4"
           if (Test-Path "$cudaPath\bin\nvcc.exe") {
             Write-Host "CUDA installed successfully"
