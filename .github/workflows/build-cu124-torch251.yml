@@ -51,8 +51,9 @@ jobs:
       - name: Install PyTorch and build tools
         run: |
           python -m pip install --upgrade pip
-          # Use CPU-only PyTorch for building - much smaller, CUDA extension still compiles with container's nvcc
-          python -m pip install torch==${{ env.PYTORCH_VERSION }} --index-url https://download.pytorch.org/whl/cpu
+          # Install CUDA PyTorch then remove bundled NVIDIA libs (we have system CUDA)
+          python -m pip install torch==${{ env.PYTORCH_VERSION }}+cu124 --index-url https://download.pytorch.org/whl/cu124
+          pip uninstall -y nvidia-cublas-cu12 nvidia-cuda-nvrtc-cu12 nvidia-cuda-runtime-cu12 nvidia-cudnn-cu12 nvidia-cufft-cu12 nvidia-curand-cu12 nvidia-cusolver-cu12 nvidia-cusparse-cu12 nvidia-nccl-cu12 nvidia-nvtx-cu12 nvidia-nvjitlink-cu12 nvidia-cufile-cu12 nvidia-cuda-cupti-cu12 || true
           python -m pip install wheel setuptools ninja
 
       - name: Verify setup
