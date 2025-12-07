@@ -1,6 +1,6 @@
 # SAM3 Speedup Wheels
 
-Pre-built CUDA extension wheels for [ComfyUI-SAM3](https://github.com/PozzettiAndrea/ComfyUI-SAM3) GPU acceleration.
+Prebuilt CUDA extension wheels for [ComfyUI-SAM3](https://github.com/PozzettiAndrea/ComfyUI-SAM3) GPU acceleration.
 
 These wheels provide **5-10x faster video tracking** without requiring users to compile CUDA extensions themselves.
 
