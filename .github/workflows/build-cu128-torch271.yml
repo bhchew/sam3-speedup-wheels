@@ -10,7 +10,7 @@ env:
   CUDA_VERSION: '12.8'
   CUDA_SHORT: '128'
   PYTORCH_VERSION: '2.7.1'
-  TORCH_SHORT: '270'
+  TORCH_SHORT: '271'
   TORCH_CUDA_ARCH_LIST: '7.5;8.6;8.9;9.0;10.0;12.0'
 
 jobs:
@@ -245,7 +245,7 @@ jobs:
           <h1>SAM3 Speedup Wheels</h1>
           <p><strong>CUDA ${{ env.CUDA_VERSION }} + PyTorch ${{ env.PYTORCH_VERSION }}</strong></p>
           <h2>Install</h2>
-          <pre>pip install torch_generic_nms cc_torch --find-links https://pozzettiandrea.github.io/sam3-speedup-wheels/cu${{ env.CUDA_SHORT }}-torch${{ env.TORCH_SHORT }}/</pre>
+          <pre>pip install torch_generic_nms cc_torch --find-links https://bhchew.github.io/sam3-speedup-wheels/cu${{ env.CUDA_SHORT }}-torch${{ env.TORCH_SHORT }}/</pre>
           <h2>Available Wheels</h2>
           HEADER
 
